@@ -18,7 +18,7 @@ export const TodoApp = () => {
          <h1 className="text-3xl font-bold mb-3">TodoApp <span className="text-base">({todos.length})</span></h1>
          <hr className="mb-5" />
 
-         <div className="grid grid-cols-12">
+         <div className="grid grid-cols-12 px-32 py-10">
             <div className="col-span-7">
                <ul>
                   {
