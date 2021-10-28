@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext'
 
 export const HomeScreen = () => {
+
+   const { user } = useContext(UserContext);
+
+   console.log(user);
+
    return (
-      <div className="p-20">
+      <>
          <h1 className="text-3xl font-bold mb-5">Home Screen</h1>
          <hr />
-      </div>
+
+         <pre>
+            {JSON.stringify(user, null, 3)}
+         </pre>
+      </>
    )
 }
