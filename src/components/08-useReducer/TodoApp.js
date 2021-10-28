@@ -22,6 +22,22 @@ export const TodoApp = () => {
       localStorage.setItem('todos', JSON.stringify( todos ))
    }, [todos]);
 
+   const handleDelete = (todoId) => {
+      const action = {
+         type: 'delete',
+         payload: todoId
+      }
+
+      dispatch(action);
+   }
+
+   const handleToggle = (todoId) => {
+      dispatch({
+         type: 'toggle',
+         payload: todoId
+      })
+   }
+
    const handleInputChange = (e) => {
       e.preventDefault();
       setInputValue(e.target.value);
@@ -48,6 +64,8 @@ export const TodoApp = () => {
       }
    }
 
+
+
    return (
       <div className="p-20">
          <h1 className="text-3xl font-bold mb-3">TodoApp <span className="text-base">({todos.length})</span></h1>
@@ -59,10 +77,19 @@ export const TodoApp = () => {
                   {
                      todos.map((todo, index) => (
                         <li key={todo.id} className="flex items-center justify-between mb-3 ">
-                           <p className="text-center cursor-pointer">
+                           <p 
+                              className={`text-center cursor-pointer ${todo.done && 'line-through'}`} 
+                              onClick={() => handleToggle(todo.id)}
+                           
+                           >
                               {index + 1}.- {todo.desc}
                            </p>
-                           <button className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white mr-60">Borrar</button>
+                           <button 
+                              className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white mr-60"
+                              onClick={() => handleDelete(todo.id)}
+                           >
+                              Borrar
+                           </button>
 
                         </li>
                      ))
