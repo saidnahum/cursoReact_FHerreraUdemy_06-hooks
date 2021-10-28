@@ -1,17 +1,52 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { todoReducer } from './todoReducer';
+
+// Definir estado inicial
+const init = () => {
+   // return [{
+   //    id: new Date().getTime(),
+   //    desc: 'Aprender React',
+   //    done: false
+   // }]
+
+   return JSON.parse(localStorage.getItem('todos')) || [];
+}
 
 export const TodoApp = () => {
 
-   // Definir estado inicial
-   const initialState = [{
-      id: new Date().getTime(),
-      desc: 'Aprender React',
-      done: false
-   }];
-
-   const [ todos ] = useReducer(todoReducer, initialState)
+   const [todos, dispatch] = useReducer(todoReducer, [], init);
+   const [inputValue, setInputValue] = useState('');
    //console.log(todos);
+
+   useEffect(() => {
+      localStorage.setItem('todos', JSON.stringify( todos ))
+   }, [todos]);
+
+   const handleInputChange = (e) => {
+      e.preventDefault();
+      setInputValue(e.target.value);
+   }
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      if(inputValue.length >0) {
+         e.preventDefault();
+
+      const newTodo = {
+         id: new Date().getTime(),
+         desc: inputValue,
+         done: false
+      }
+
+      const action = {
+         type: 'add',
+         payload: newTodo
+      }
+
+      dispatch(action);
+      setInputValue('');
+      }
+   }
 
    return (
       <div className="p-20">
@@ -23,11 +58,12 @@ export const TodoApp = () => {
                <ul>
                   {
                      todos.map((todo, index) => (
-                        <li key={todo.id} className="flex items-center space-x-32">
+                        <li key={todo.id} className="flex items-center justify-between mb-3 ">
                            <p className="text-center cursor-pointer">
-                              {index +1}.- {todo.desc}
+                              {index + 1}.- {todo.desc}
                            </p>
-                           <button className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white">Borrar</button>
+                           <button className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-white mr-60">Borrar</button>
+
                         </li>
                      ))
                   }
@@ -38,15 +74,20 @@ export const TodoApp = () => {
                <h4 className="text-2xl font-bolde mb-3">Agregar Tarea</h4>
                <hr />
 
-               <form className="mt-5"> 
-                  <input 
-                     type="text" 
+               <form className="mt-5" onSubmit={handleSubmit}>
+                  <input
+                     type="text"
                      name="description"
                      placeholder="Agregar descripción"
                      autoComplete="off"
                      className="border px-3 py-2 rounded-lg mr-5 focus:outline-none w-full"
+                     value={inputValue}
+                     onChange={handleInputChange}
                   />
-                  <button className="p-2 rounded-md bg-blue-500 hover:bg-blue-400 text-white w-full mt-3">
+                  <button
+                     className="p-2 rounded-md bg-blue-500 hover:bg-blue-400 text-white w-full mt-3"
+                     type="submit"
+                  >
                      Agregar
                   </button>
                </form>
